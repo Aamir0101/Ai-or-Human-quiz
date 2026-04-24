@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Human or AI?</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+  <!-- Starfield canvas -->
+  <canvas id="starfield"></canvas>
+
+  <!-- Atmospheric orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Grid overlay -->
+  <div class="scan-grid"></div>
+
+  <!-- Main content -->
+  <main class="page">
+    <div class="landing-badge">
+      <span></span> Visual Intelligence Quiz
+    </div>
+
+    <h1 class="landing-title">
+      <span class="word-human">Human</span>
+      <span class="or-text">or</span>
+      <span class="word-ai">AI?</span>
+    </h1>
+
+    <div class="accent-line"></div>
+
+    <p class="landing-desc">
+      Can you tell the difference between a human-made masterpiece
+      and a machine-generated image? Test your perception—before the
+      lines blur completely.
+    </p>
+
+    <a href="/instructions" class="btn btn-primary">
+      Start &rarr;
+    </a>
+  </main>
+
+  <script>
+    /* ── Starfield ── */
+    (function () {
+      const canvas = document.getElementById('starfield');
+      const ctx    = canvas.getContext('2d');
+      let stars    = [];
+      const COUNT  = 140;
+
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      function init() {
+        stars = Array.from({ length: COUNT }, () => ({
+          x:       Math.random() * canvas.width,
+          y:       Math.random() * canvas.height,
+          r:       Math.random() * 1.4 + 0.3,
+          alpha:   Math.random(),
+          speed:   Math.random() * 0.004 + 0.001,
+          phase:   Math.random() * Math.PI * 2,
+        }));
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const t = Date.now() * 0.001;
+        stars.forEach(s => {
+          const a = 0.2 + 0.7 * (0.5 + 0.5 * Math.sin(t * s.speed * 60 + s.phase));
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(232,234,240,${a})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      init();
+      draw();
+      window.addEventListener('resize', () => { resize(); init(); });
+    })();
+  </script>
+
+</body>
+</html>
