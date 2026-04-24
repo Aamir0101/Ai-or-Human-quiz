@@ -21,6 +21,10 @@ app.get("/quiz", (req,res)=>{
 })
 
 
+app.use((req,res)=>{
+    res.status(404).render("error.ejs");
+})
+
 app.listen(8080, ()=>{
     console.log("app is listening to port 8080")
 })
