@@ -51,18 +51,18 @@ const questions = [
   }
 ];
 
-/* ── Shuffle (Fisher-Yates) ── */
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+// /* ── Shuffle (Fisher-Yates) ── */
+// function shuffle(arr) {
+//   const a = [...arr];
+//   for (let i = a.length - 1; i > 0; i--) {
+//     const j = Math.floor(Math.random() * (i + 1));
+//     [a[i], a[j]] = [a[j], a[i]];
+//   }
+//   return a;
+// }
 
 /* ── State ── */
-let shuffledQuestions = [];
+// let shuffledQuestions = [];
 let currentIndex = 0;
 let score        = 0;
 let answered     = false;
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Restart button (results screen)
   document.getElementById('btn-restart')?.addEventListener('click', restartQuiz);
 
-  shuffledQuestions = shuffle(questions);
+  // shuffledQuestions = shuffle(questions);
   loadQuestion(0);
 });
 
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
    LOAD QUESTION
 ───────────────────────────────────────────── */
 function loadQuestion(index) {
-  const q = shuffledQuestions[index];
+  // const q = shuffledQuestions[index];
   answered = false;
 
   // Reset button states
