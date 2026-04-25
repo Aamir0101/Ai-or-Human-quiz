@@ -1,14 +1,3 @@
-/**
- * script.js — Human or AI? Quiz Logic
- * Handles question progression, scoring, and UI state
- */
-
-/* ─────────────────────────────────────────────
-   QUESTION BANK
-   Each entry: { image, answer, caption }
-   Images: Unsplash (human art / photography) vs
-           known AI-generated placeholders via picsum
-───────────────────────────────────────────── */
 const questions = [
   {
     image:   'https://imaginewithrashid.com/wp-content/uploads/2023/12/21-prompts-to-generate-landscape-images-using-Ai.webp',
@@ -62,7 +51,18 @@ const questions = [
   }
 ];
 
+/* ── Shuffle (Fisher-Yates) ── */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 /* ── State ── */
+let shuffledQuestions = [];
 let currentIndex = 0;
 let score        = 0;
 let answered     = false;
@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Restart button (results screen)
   document.getElementById('btn-restart')?.addEventListener('click', restartQuiz);
 
+  shuffledQuestions = shuffle(questions);
   loadQuestion(0);
 });
 
@@ -102,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
    LOAD QUESTION
 ───────────────────────────────────────────── */
 function loadQuestion(index) {
-  const q = questions[index];
+  const q = shuffledQuestions[index];
   answered = false;
 
   // Reset button states
@@ -112,10 +113,10 @@ function loadQuestion(index) {
   });
 
   // Update counter
-  qCounter.innerHTML = `Question <strong>${index + 1}</strong> / ${questions.length}`;
+  qCounter.innerHTML = `Question <strong>${index + 1}</strong> / ${shuffledQuestions.length}`;
 
   // Update progress bar
-  const pct = (index / questions.length) * 100;
+  const pct = (index / shuffledQuestions.length) * 100;
   progressFill.style.width = `${pct}%`;
 
   // Update score
@@ -130,7 +131,6 @@ function loadQuestion(index) {
     setTimeout(() => quizImage.classList.remove('loading'), 50);
   };
   img.onerror = () => {
-    // Fallback to a coloured placeholder if image fails to load
     quizImage.src = `https://picsum.photos/seed/${index + 10}/800/600`;
     setTimeout(() => quizImage.classList.remove('loading'), 50);
   };
@@ -144,7 +144,7 @@ function handleAnswer(choice) {
   if (answered) return;
   answered = true;
 
-  const correct = questions[currentIndex].answer;
+  const correct = shuffledQuestions[currentIndex].answer;
   const isRight = choice === correct;
 
   if (isRight) score++;
@@ -166,7 +166,7 @@ function handleAnswer(choice) {
   // Advance after 1.4 s
   setTimeout(() => {
     currentIndex++;
-    if (currentIndex < questions.length) {
+    if (currentIndex < shuffledQuestions.length) {
       loadQuestion(currentIndex);
     } else {
       showResults();
@@ -186,10 +186,10 @@ function showResults() {
   resultsSection.classList.add('show');
 
   // Score display
-  resultsScoreBig.textContent = `${score}/${questions.length}`;
+  resultsScoreBig.textContent = `${score}/${shuffledQuestions.length}`;
 
   // Flavour label
-  const pct = (score / questions.length) * 100;
+  const pct = (score / shuffledQuestions.length) * 100;
   let label = '';
   if (pct === 100)      label = "Perfect score! You can't be fooled. 🧠";
   else if (pct >= 80)   label = "Sharp eye — nearly flawless.";
@@ -215,5 +215,6 @@ function restartQuiz() {
   resultsSection.classList.remove('show');
   quizSection.style.display    = 'flex';
 
+  shuffledQuestions = shuffle(questions);
   loadQuestion(0);
 }
