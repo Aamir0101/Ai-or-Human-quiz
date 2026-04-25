@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
    LOAD QUESTION
 ───────────────────────────────────────────── */
 function loadQuestion(index) {
+  index= Math.floor(Math.random() * 10);
   const q = questions[index];
   answered = false;
 
